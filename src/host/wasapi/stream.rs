@@ -243,10 +243,7 @@ fn wait_for_handle_signal(handles: &[Foundation::HANDLE]) -> Result<usize, Backe
         )
     };
     if result == Foundation::WAIT_FAILED {
-        let err = match unsafe { Foundation::GetLastError() } {
-            Ok(()) => windows::core::Error::OK,
-            Err(err) => err,
-        };
+        let err = unsafe { Foundation::GetLastError() };
         let description = format!("`WaitForMultipleObjectsEx failed: {}", err);
         let err = BackendSpecificError { description };
         return Err(err);
