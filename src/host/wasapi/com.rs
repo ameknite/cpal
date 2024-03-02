@@ -6,7 +6,7 @@ use std::marker::PhantomData;
 use windows::Win32::Foundation::RPC_E_CHANGED_MODE;
 use windows::Win32::System::Com::{CoInitializeEx, CoUninitialize, COINIT_APARTMENTTHREADED};
 
-thread_local!(static COM_INITIALIZED: ComInitialized = {
+static COM_INITIALIZED: ComInitialized = {
     unsafe {
         // Try to initialize COM with STA by default to avoid compatibility issues with the ASIO
         // backend (where CoInitialize() is called by the ASIO SDK) or winit (where drag and drop
@@ -28,14 +28,14 @@ thread_local!(static COM_INITIALIZED: ComInitialized = {
             );
         }
     }
-});
+};
 
 /// RAII object that guards the fact that COM is initialized.
 ///
 // We store a raw pointer because it's the only way at the moment to remove `Send`/`Sync` from the
 // object.
 struct ComInitialized {
-    result: windows::core::Result<()>,
+    result: windows::core::HRESULT,
     _ptr: PhantomData<*mut ()>,
 }
 
