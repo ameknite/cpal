@@ -297,7 +297,7 @@ impl Device {
                     DeviceNameError::from(err)
                 })?;
 
-            let prop_variant = &property_value.Anonymous.Anonymous;
+            let prop_variant = &property_value.as_raw().Anonymous.Anonymous;
 
             // Read the friendly-name from the union data field, expecting a *const u16.
             if prop_variant.vt != VT_LPWSTR {
